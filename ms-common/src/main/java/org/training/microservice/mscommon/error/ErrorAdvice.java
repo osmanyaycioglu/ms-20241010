@@ -1,5 +1,7 @@
 package org.training.microservice.mscommon.error;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ErrorAdvice {
+    private static final Logger logger = LoggerFactory.getLogger(ErrorAdvice.class);
 
     @Value("${spring.application.name}")
     private String microserviceName;
@@ -64,6 +67,7 @@ public class ErrorAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorObj> handleExp(Exception exp) {
+        logger.error("[ErrorAdvice][handleExp]-> *Error* : " + exp.getMessage(),exp);
         if (exp instanceof NullPointerException) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
                                  .body(ErrorObj.builder()
