@@ -18,9 +18,9 @@ public class OrderDto {
     private String phoneNumber;
     @NotBlank
     @Size(min = 10,max = 10)
-    private String orderRequestId;
+    private String        orderRequestId;
     @NotNull
     @Size(min = 1,max = 20)
     @Valid
-    private List<Meal> meals;
+    private List<MealDto> meals;
 }
