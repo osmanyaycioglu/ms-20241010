@@ -2,6 +2,7 @@ package org.training.microservice.msorder.order.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.training.microservice.msorder.data.OrderDao;
 import org.training.microservice.msorder.integration.PaymentProcessIntegration;
 import org.training.microservice.msorder.integration.models.PaymentResponse;
 import org.training.microservice.msorder.order.service.models.Order;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderProcessService {
     private final PaymentProcessIntegration paymentProcessIntegration;
+    private final OrderDao orderDao;
 
     public OrderCreateReturn place(Order orderParam) {
         orderParam.setOrderId(UUID.randomUUID()
@@ -24,7 +26,7 @@ public class OrderProcessService {
         PaymentResponse payLoc = paymentProcessIntegration.pay(orderParam.getOrderId(),
                                                                "abc1234",
                                                                new BigDecimal(1000));
-
+        orderDao.addOrder(orderParam);
         return new OrderCreateReturn(orderParam.getOrderId(),
                                      orderParam.getOrderRequestId(),
                                      new BigDecimal(1000),
@@ -42,6 +44,7 @@ public class OrderProcessService {
                                                                 "abc1234",
                                                                 new BigDecimal(1000));
 
+        orderDao.addOrder(orderParam);
         return new OrderCreateReturn(orderParam.getOrderId(),
                                      orderParam.getOrderRequestId(),
                                      new BigDecimal(1000),
@@ -58,6 +61,7 @@ public class OrderProcessService {
                                                                 "abc1234",
                                                                 new BigDecimal(1000));
 
+        orderDao.addOrder(orderParam);
         return new OrderCreateReturn(orderParam.getOrderId(),
                                      orderParam.getOrderRequestId(),
                                      new BigDecimal(1000),
@@ -74,6 +78,7 @@ public class OrderProcessService {
                                                                 "abc1234",
                                                                 new BigDecimal(1000));
 
+        orderDao.addOrder(orderParam);
         return new OrderCreateReturn(orderParam.getOrderId(),
                                      orderParam.getOrderRequestId(),
                                      new BigDecimal(1000),

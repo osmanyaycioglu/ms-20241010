@@ -21,22 +21,22 @@ public class OrderProcessRestController implements IOrderProcessRestController {
 
     @PostMapping("/place1")
     @Override
-    public OrderPlaceResponse placeOrder(OrderDto orderDtoParam) {
+    public OrderPlaceResponse placeOrder(@Valid @RequestBody OrderDto orderDtoParam) {
         return IOrderMapper.ORDER_MAPPER.toOrderPlaceResponse(orderProcessService.place(IOrderMapper.ORDER_MAPPER.toOrder(orderDtoParam)));
     }
 
     @PostMapping("/place2")
-    public OrderPlaceResponse placeOrder2(OrderDto orderDtoParam) {
+    public OrderPlaceResponse placeOrder2(@Valid @RequestBody OrderDto orderDtoParam) {
         return IOrderMapper.ORDER_MAPPER.toOrderPlaceResponse(orderProcessService.place2(IOrderMapper.ORDER_MAPPER.toOrder(orderDtoParam)));
     }
 
     @PostMapping("/place3")
-    public OrderPlaceResponse placeOrder3(OrderDto orderDtoParam) {
+    public OrderPlaceResponse placeOrder3(@Valid @RequestBody OrderDto orderDtoParam) {
         return IOrderMapper.ORDER_MAPPER.toOrderPlaceResponse(orderProcessService.place3(IOrderMapper.ORDER_MAPPER.toOrder(orderDtoParam)));
     }
 
     @PostMapping("/place4")
-    public OrderPlaceResponse placeOrder4(OrderDto orderDtoParam) {
+    public OrderPlaceResponse placeOrder4(@Valid @RequestBody OrderDto orderDtoParam) {
         return IOrderMapper.ORDER_MAPPER.toOrderPlaceResponse(orderProcessService.place4(IOrderMapper.ORDER_MAPPER.toOrder(orderDtoParam)));
     }
 

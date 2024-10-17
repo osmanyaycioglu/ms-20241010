@@ -14,6 +14,8 @@ public class OrderDao {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void addOrder(Order orderParam) {
+        orderParam.getMeals()
+                  .forEach(mealParam -> mealParam.setOrder(orderParam));
         orderRepository.save(orderParam);
         // insertAnother1(orderParam);
     }
