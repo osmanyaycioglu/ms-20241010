@@ -7,12 +7,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -36,11 +34,23 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JWTService jwtService() {
+        return new JWTService();
+    }
+
+    @Bean
+    public JWTFilter jwtFilter() {
+        return new JWTFilter(jwtService(),
+                             myUserDetailService());
+    }
+
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors(CorsConfigurer::disable)
                    .csrf(CsrfConfigurer::disable)
                    .authorizeHttpRequests(a -> a.requestMatchers("/actuator/**",
-                                                                 "/sec/**")
+                                                                 "/security/login")
                                                 .anonymous()
                                                 .requestMatchers("/order/**")
                                                 .hasAnyAuthority("USER",
@@ -50,8 +60,10 @@ public class SecurityConfig {
                                                                  "SUPER_ADMIN")
                                                 .anyRequest()
                                                 .authenticated())
+                   .addFilterBefore(jwtFilter(),
+                                    UsernamePasswordAuthenticationFilter.class)
                    .formLogin(FormLoginConfigurer::disable)
-                   .httpBasic(Customizer.withDefaults())
+                   .httpBasic(HttpBasicConfigurer::disable)
                    .sessionManagement(SessionManagementConfigurer::disable)
                    .build();
     }
