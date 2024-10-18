@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,6 +45,17 @@ public class ErrorAdvice {
         return ErrorObj.builder()
                        .withErrorDesc("Login problem")
                        .withErrorCode(2051)
+                       .withBoundedContext(boundedContextName)
+                       .withMicroservice(microserviceName)
+                       .build();
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorObj handleExp(AuthorizationDeniedException exp) {
+        return ErrorObj.builder()
+                       .withErrorDesc("Authorization error")
+                       .withErrorCode(2053)
                        .withBoundedContext(boundedContextName)
                        .withMicroservice(microserviceName)
                        .build();
