@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/ms-order/pom.xml" />
         <option value="$PROJECT_DIR$/ms-common/pom.xml" />
         <option value="$PROJECT_DIR$/ms-payment/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-notify/pom.xml" />
       </list>
     </option>
   </component>
