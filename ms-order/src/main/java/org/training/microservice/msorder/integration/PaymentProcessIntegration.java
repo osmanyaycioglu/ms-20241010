@@ -2,6 +2,8 @@ package org.training.microservice.msorder.integration;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ public class PaymentProcessIntegration {
     private final IPaymentProcessFeignClient paymentProcessFeignClient;
     private       AtomicLong                 index = new AtomicLong();
 
+    @Retry(name = "retry-pay1")
     public PaymentResponse pay(String orderId,
                                String customerId,
                                BigDecimal amount) {
@@ -68,14 +71,16 @@ public class PaymentProcessIntegration {
         InstanceInfo instanceInfoLoc = instancesLoc.get((int) (index.incrementAndGet() % instancesLoc.size()));
         RestTemplate restTemplateLoc = new RestTemplate();
         return restTemplateLoc.postForObject("http://"
-                                          + instanceInfoLoc.getIPAddr()
-                                          + ":"
-                                          + instanceInfoLoc.getPort()
-                                          + "/api/v1/payment/process/pay",
-                                          paymentRequestLoc,
-                                          PaymentResponse.class);
+                                             + instanceInfoLoc.getIPAddr()
+                                             + ":"
+                                             + instanceInfoLoc.getPort()
+                                             + "/api/v1/payment/process/pay",
+                                             paymentRequestLoc,
+                                             PaymentResponse.class);
     }
 
+    @Retry(name = "retry-pay4", fallbackMethod = "pay4Fallback")
+    @CircuitBreaker(name = "cb-pay4")
     public PaymentResponse pay4(String orderId,
                                 String customerId,
                                 BigDecimal amount) {
@@ -86,6 +91,13 @@ public class PaymentProcessIntegration {
                                                          .build();
 
         return paymentProcessFeignClient.pay(paymentRequestLoc);
+    }
+
+    public PaymentResponse pay4Fallback(String orderId,
+                                        String customerId,
+                                        BigDecimal amount,
+                                        Throwable throwableParam) {
+        return null;
     }
 
 }

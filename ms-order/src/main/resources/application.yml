@@ -1,0 +1,75 @@
+bounded:
+  context:
+    name: orderBoundedContext
+management:
+  endpoint:
+    auditevents:
+      enabled: true
+    env:
+      show-values: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+server:
+  error:
+    include-binding-errors: always
+    include-exception: true
+    include-message: always
+  port: ${uygulama.portu:10000}
+  shutdown: graceful
+spring:
+  application:
+    name: order
+  config:
+    import: configserver:http://127.0.0.1:8888
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: 123456
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+  security:
+    user:
+      name: user
+      password: 123456
+resilience4j:
+  retry:
+    instances:
+      retry-pay4:
+        base-config: common1
+      retry-pay1:
+        base-config: common1
+    configs:
+      common1:
+        max-attempts: 3
+        wait-duration: 1ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        exponential-max-wait-duration: 20ms
+        retry-exception-predicate: org.training.microservice.msorder.integration.resliency.CheckIntegrationException
+        result-predicate: org.training.microservice.msorder.integration.resliency.CheckPaymentResponse
+  circuitbreaker:
+    instances:
+      cb-pay4:
+        sliding-window-type: count_based
+        sliding-window-size: 20
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 2s
+        automatic-transition-from-open-to-half-open-enabled: false
+        permitted-number-of-calls-in-half-open-state: 10
+        minimum-number-of-calls: 10
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 1000ms
+
+
