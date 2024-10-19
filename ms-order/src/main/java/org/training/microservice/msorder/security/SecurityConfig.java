@@ -50,7 +50,7 @@ public class SecurityConfig {
         return http.cors(CorsConfigurer::disable)
                    .csrf(CsrfConfigurer::disable)
                    .authorizeHttpRequests(a -> a.requestMatchers("/actuator/**",
-                                                                 "/security/login")
+                                                                 "/security/**")
                                                 .anonymous()
                                                 .requestMatchers("/order/**")
                                                 .hasAnyAuthority("USER",
