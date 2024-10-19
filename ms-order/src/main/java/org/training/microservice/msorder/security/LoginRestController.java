@@ -3,12 +3,14 @@ package org.training.microservice.msorder.security;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 import org.training.microservice.msorder.security.models.Credential;
 
 import java.util.Collection;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("security")
 @RequiredArgsConstructor
+// @RequestScope
+@RefreshScope
 public class LoginRestController {
     private final JWTService             jwtService;
     private final AuthenticationProvider authenticationProvider;
