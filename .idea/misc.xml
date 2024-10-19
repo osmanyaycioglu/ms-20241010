@@ -13,6 +13,10 @@
         <option value="$PROJECT_DIR$/ms-payment/pom.xml" />
         <option value="$PROJECT_DIR$/ms-notify/pom.xml" />
         <option value="$PROJECT_DIR$/ms-kafka-test/pom.xml" />
+        <option value="$PROJECT_DIR$/apigw-oauth-test/pom.xml" />
+        <option value="$PROJECT_DIR$/api-test/pom.xml" />
+        <option value="$PROJECT_DIR$/api-test-caller/pom.xml" />
+        <option value="$PROJECT_DIR$/apigw-order/pom.xml" />
       </list>
     </option>
   </component>

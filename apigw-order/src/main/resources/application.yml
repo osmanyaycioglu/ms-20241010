@@ -1,0 +1,28 @@
+bounded:
+  context:
+    name: orderBoundedContext
+server:
+  port: ${uygulama.portu:8000}
+spring:
+  application:
+    name: order-gw
+  config:
+    import: configserver:http://127.0.0.1:8888
+  cloud:
+    gateway:
+      metrics:
+        enabled: true
+      routes:
+        - id: order-ms-route
+          uri: lb://ORDER
+          predicates:
+            - Path=/apigw/api/*/order/**
+            - TokenCheck=true, osman
+          filters:
+            - RewritePath=/apigw/?(?<segment>.*), /$\{segment}
+            - Logging=debug, deneme
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
